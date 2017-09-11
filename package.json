@@ -4,7 +4,7 @@
   "description": "A simple timelapse site and API",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
+    "start": "node server/server.js",
     "start-watch": "nodemon -e js,html --exec \"npm start\"",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
     "test-watch": "nodemon --exec \"npm test\""
@@ -19,18 +19,20 @@
     "body-parser": "^1.18.0",
     "crypto-js": "^3.1.9-1",
     "express": "^4.15.4",
+    "express-fileupload": "^0.2.0",
+    "hbs": "^4.0.1",
     "jsonwebtoken": "^7.4.3",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mongodb": "^2.2.5",
     "mongoose": "^4.11.5",
-    "multer": "^1.3.0",
     "validator": "^8.1.0"
   },
   "devDependencies": {
     "eslint": "^4.6.1",
     "eslint-plugin-import": "^2.7.0",
     "expect": "^1.20.2",
+    "jslint": "^0.11.0",
     "mocha": "^3.5.0",
     "nodemon": "^1.12.0",
     "supertest": "^3.0.0"

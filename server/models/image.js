@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
-  buffer: {
-    type: [Buffer],
+  filename: {
+    type: String,
     required: true
   }
 });
@@ -12,8 +12,8 @@ ImageSchema.statics.findLatest = function findLatest() {
 
   return Image.find().sort({ _id: -1 }).limit(1)
     .then((image) => {
-      if (!image) return Promise.reject();
-      return image;
+      if (!image[0]) return Promise.reject();
+      return image[0];
     });
 };
 
