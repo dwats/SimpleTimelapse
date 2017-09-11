@@ -1,6 +1,6 @@
 const path = require('path');
-const http = require('http');
 const express = require('express');
+const bodyParser = require('body-parser');
 const _ = require('lodash');
 
 require('./config/config');
@@ -12,8 +12,9 @@ const { authenticate } = require('./middleware/authenticate');
 const publicPath = path.join(`${__dirname}/../public`);
 const port = process.env.PORT;
 const app = express();
-const server = http.createServer(app);
 
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static(publicPath));
 
 // User Login
@@ -33,8 +34,8 @@ app.post('/users/login', (req, res) => {
 
 // Image Submit
 app.post('/images', (req, res) => {
-  console.log(req.body);
-  const image = new Image({ buffer: req.body.buffer });
+  if (!req.body) return res.status(400).send();
+  const image = new Image({ buffer: req.body.buffer.data });
 
   image.save()
     .then(() => {
@@ -50,7 +51,8 @@ app.post('/images', (req, res) => {
 app.get('/images', (req, res) => {
   Image.findLatest()
     .then((image) => {
-      res.send({ buffer: image.buffer });
+      if (!image) return res.status(404).send();
+      res.send({ buffer: image[0].buffer });
     })
     .catch((e) => {
       console.log('error fetching image from db', e);
@@ -63,7 +65,7 @@ app.get('/images', (req, res) => {
 //
 // });
 
-server.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Started at port ${port}`);
 });
 

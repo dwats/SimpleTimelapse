@@ -10,10 +10,10 @@ const ImageSchema = new mongoose.Schema({
 ImageSchema.statics.findLatest = function findLatest() {
   const Image = this;
 
-  return Image.find().sort({_id: -1}).limit(1)
+  return Image.find().sort({ _id: -1 }).limit(1)
     .then((image) => {
       if (!image) return Promise.reject();
-      return image.buffer;
+      return image;
     });
 };
 
