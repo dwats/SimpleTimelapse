@@ -1,0 +1,37 @@
+{
+  "name": "timelapse-site",
+  "version": "1.0.0",
+  "description": "A simple timelapse site and API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "start-watch": "nodemon -e js,html --exec \"npm start\"",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\""
+  },
+  "engines": {
+    "node": "8.4.0"
+  },
+  "author": "Eric Julius",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.17.2",
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^7.4.3",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "mongodb": "^2.2.5",
+    "mongoose": "^4.11.5",
+    "validator": "^8.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.6.1",
+    "eslint-plugin-import": "^2.7.0",
+    "expect": "^1.20.2",
+    "mocha": "^3.5.0",
+    "nodemon": "^1.12.0",
+    "supertest": "^3.0.0"
+  }
+}
