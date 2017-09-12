@@ -1,6 +1,6 @@
 const video = new Whammy.Video();
 
-fetch('http://192.168.1.100:3000/images')
+fetch('https://tranquil-retreat-86983.herokuapp.com/images')
   .then((res) => res.json())
   .then((data) => {
     const promises = data.frames.map((frameData) => frameData.filename).map(getWebp);
@@ -13,7 +13,6 @@ fetch('http://192.168.1.100:3000/images')
           videoElm.src = url;
           videoElm.style.display = '';   
           progressElm.innerHTML = '';
-          progressElm.style.height = '0';
         });
       });
   })
