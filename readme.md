@@ -1,4 +1,4 @@
 # Simple Timelapse
-## Show of things that happen slowly.
+## Showing the things that happen slowly.
 
 TODO
