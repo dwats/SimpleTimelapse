@@ -29,14 +29,14 @@ app.all('/', (req, res, next) => {
   next();
 });
 
-// 'index'
 app.get('/', (req, res) => {
   Image.findLatest()
     .then((data) => {
       res.render('index.hbs', {
         latestImage: `${data.filename}`,
         datetime: ObjectId(data._id).getTimestamp(),
-        year: new Date().getFullYear()
+        year: new Date().getFullYear(),
+        APP_URL: process.env.APP_URL || 'https://tranquil-retreat-86983.herokuapp.com'
       });
     })
     .catch((e) => {
@@ -45,13 +45,13 @@ app.get('/', (req, res) => {
     });
 });
 
-// Image Submit
+// Submit Image
 app.post('/images', (req, res) => {
   if (!req.files) return res.status(400).send({ status: 'no file'});
 
   const file = req.files.file;
   const fileId = new ObjectId();
-  file.mv(path.join(__dirname, '../public/images', `${fileId}.png`), (err) => {
+  file.mv(path.join('../public/images', `${fileId}.png`), (err) => {
     if (err) {
       console.log(err);
       return res.status(500).send({ status: 'could not save file' });
@@ -73,6 +73,7 @@ app.post('/images', (req, res) => {
   });
 });
 
+// Get last 60 images
 app.get('/images', (req, res) => {
   Image.findLast60()
     .then((frames) => {
@@ -84,15 +85,12 @@ app.get('/images', (req, res) => {
     })
 });
 
-// Get Timelapse
-// app.get('/images/sequence', (req, res) => {
-//
-// });
-
+/**
+ * TODO
+ */ 
 // User Login
 // app.post('/users/login', (req, res) => {
 //   const body = _.pick(req.body, ['email', 'password']);
-
 //   User.findByCredentials(body.email, body.password)
 //     .then(user => user.generateAuthToken()
 //       .then((token) => {

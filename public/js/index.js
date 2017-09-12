@@ -1,6 +1,6 @@
 const video = new Whammy.Video();
 
-fetch('https://tranquil-retreat-86983.herokuapp.com/images')
+fetch(`${url}/images`)
   .then((res) => res.json())
   .then((data) => {
     const promises = data.frames.map((frameData) => frameData.filename).map(getWebp);
