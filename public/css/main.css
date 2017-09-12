@@ -1,0 +1,55 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+body {
+  font-family: sans-serif;
+  background-color: #eee;
+  margin: auto;
+  text-align: center;
+}
+header {
+  font-size: 1.25em;
+  margin: 1vh;
+  width: 100%;
+  top: 0px;
+}
+footer {
+  font-size: 0.75em;
+  margin: 1vh;
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+}
+#container {
+  margin: 20px 0 0 0;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+}
+#latest-image {
+  margin: auto 0 auto 0;
+}
+#latest-image img {
+  max-height: 60vh;
+  max-width: 45vw;
+  min-width: 35vw;
+  margin: 0 10px 0 10px;
+  vertical-align: bottom;
+}
+#timelapse {
+  margin: auto 0 auto 0;
+}
+#timelapse video {
+  max-height: 60vh;
+  max-width: 45vw;
+  min-width: 35vw;
+  margin: 20px 10px 0 10px;
+  vertical-align: bottom;
+}

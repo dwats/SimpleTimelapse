@@ -17,6 +17,16 @@ ImageSchema.statics.findLatest = function findLatest() {
     });
 };
 
+ImageSchema.statics.findLast60 = function findLast60() {
+  const Image = this;
+
+  return Image.find().sort({ _id: -1 }).limit(60)
+    .then((images) => {
+      if (!images.length) return Promise.reject();
+      return images;
+    });
+};
+
 const Image = mongoose.model('Image', ImageSchema);
 
 module.exports = { Image };

@@ -23,19 +23,25 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
 app.use(express.static(publicPath));
 
+app.all('/', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  next();
+});
+
 // 'index'
 app.get('/', (req, res) => {
   Image.findLatest()
-    .then((image) => {
-      console.log('rendering', image);
+    .then((data) => {
       res.render('index.hbs', {
-        latestImage: `${image.filename}`,
-        datetime: ObjectId(image._id).getTimestamp()
+        latestImage: `${data.filename}`,
+        datetime: ObjectId(data._id).getTimestamp(),
+        year: new Date().getFullYear()
       });
     })
     .catch((e) => {
       console.log('error fetching image from db', e);
-      res.status(400).send();
+      res.status(400).send({ status: 'no image found' });
     });
 });
 
@@ -62,6 +68,17 @@ app.post('/images', (req, res) => {
         res.status(400).send({ status: 'could not write to database'});
       });
   });
+});
+
+app.get('/images', (req, res) => {
+  Image.findLast60()
+    .then((frames) => {
+      if (!frames.length) return res.status(404).send();
+      res.send({ status: 'ok', frames });
+    })
+    .catch(() => {
+      res.status(400).send({ status: 'could not find frames' });
+    })
 });
 
 // Get Timelapse
