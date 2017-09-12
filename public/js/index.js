@@ -3,9 +3,11 @@ const video = new Whammy.Video();
 fetch(`${url}/images`)
   .then((res) => res.json())
   .then((data) => {
-    const promises = data.frames.map((frameData) => frameData.filename).map(getWebp);
+    const promises = data.frames.map(getCanvas);
     Promise.all(promises)
-      .then(() => {
+      .then((canvases) => {
+        console.log(canvases)
+        canvases.forEach(canvas => video.add(canvas, 500));
         video.compile(false, (webm) => {
           const url = window.URL.createObjectURL(webm);
           const videoElm = document.getElementById('timelapse-video');
@@ -20,21 +22,23 @@ fetch(`${url}/images`)
     console.log(e);
   });
 
-const getWebp = (frame) => {
+const getCanvas = (frame) => {
   return new Promise((resolve, reject) => {
-    try {
-      const canvas = document.getElementById('timelapse-canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, 1024, 768);
-        video.add(ctx, 500);
-        resolve();
-      };
-      img.src = `./images/${frame}`;
-    }
-    catch (e) {
-      reject(e);
-    }
+    const template = document.getElementById('timelapse-canvas');
+    const canvas = template.cloneNode(true);
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, 1024, 768);
+      ctx.font = '20px Arial';
+      ctx.fillStyle = 'black';
+      ctx.fillText(frame.timestamp, 25, 25);
+      resolve(ctx);
+    };
+    img.onerror = () => { 
+      console.log('error'); 
+      resolve();
+    };
+    img.src = `./images/${frame.filename}`;
   });
 };
