@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = require('mongodb');
 
 const ImageSchema = new mongoose.Schema({
   filename: {
@@ -23,7 +24,12 @@ ImageSchema.statics.findLast60 = function findLast60() {
   return Image.find().sort({ _id: -1 }).limit(60)
     .then((images) => {
       if (!images.length) return Promise.reject();
-      return images;
+      return images
+        .map((image) => ({ 
+          filename: image.filename, 
+          timestamp: image._id.getTimestamp()
+        }))
+        .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     });
 };
 

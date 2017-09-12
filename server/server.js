@@ -51,7 +51,7 @@ app.post('/images', (req, res) => {
 
   const file = req.files.file;
   const fileId = new ObjectId();
-  file.mv(path.join('../public/images', `${fileId}.png`), (err) => {
+  file.mv(path.join(__dirname, '../public/images', `${fileId}.png`), (err) => {
     if (err) {
       console.log(err);
       return res.status(500).send({ status: 'could not save file' });
