@@ -1,21 +1,16 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
-  email: {
+  username: {
     type: String,
     lowercase: true,
     required: true,
     trim: true,
     minlength: 1,
-    unique: true,
-    validate: {
-      validator: value => validator.isEmail(value),
-      message: '{VALUE} is not a valid email.'
-    }
+    unique: true
   },
   password: {
     type: String,
@@ -38,7 +33,7 @@ UserSchema.methods.toJSON = function toJSON() {
   const user = this;
   const userObject = user.toObject();
 
-  return _.pick(userObject, ['_id', 'email']);
+  return _.pick(userObject, ['_id', 'username']);
 };
 
 UserSchema.methods.generateAuthToken = function generateAuthToken() {
@@ -86,10 +81,10 @@ UserSchema.statics.findByToken = function findByToken(token) {
     });
 };
 
-UserSchema.statics.findByCredentials = function findByCredentials(email, password) {
+UserSchema.statics.findByCredentials = function findByCredentials(username, password) {
   const User = this;
 
-  return User.findOne({ email })
+  return User.findOne({ username })
     .then((user) => {
       if (!user) return Promise.reject();
 
