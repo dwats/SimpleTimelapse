@@ -8,6 +8,10 @@ const ImageSchema = new mongoose.Schema({
   }
 });
 
+/**
+ * Return the latest image record from mongodb.
+ * @return {Object}
+ */
 ImageSchema.statics.findLatest = function findLatest() {
   const Image = this;
 
@@ -18,6 +22,11 @@ ImageSchema.statics.findLatest = function findLatest() {
     });
 };
 
+/**
+ * Return the last n images filename and timestamp from mongodb.
+ * @param {Number} n - number of images to find and return
+ * @return {Object}  - object.filename && object.timestamp
+ */
 ImageSchema.statics.findLast = function findLast(n) {
   const Image = this;
 

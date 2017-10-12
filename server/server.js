@@ -6,14 +6,16 @@ const fileUpload = require('express-fileupload');
 const { ObjectId } = require('mongodb');
 const _ = require('lodash');
 const hbs = require('hbs');
-
+// configs
 require('./config/config');
 require('./db/mongoose');
+// models
 const { Image } = require('./models/image');
 const { prune } = require('./utils/prune.js');
 const { User } = require('./models/user');
+// middleware
 const { authenticate } = require('./middleware/authenticate');
-
+// general constants
 const publicPath = path.join(`${__dirname}/../public`);
 const port = process.env.PORT;
 const app = express();
@@ -26,12 +28,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
 app.use(express.static(publicPath));
 
-// app.all('/', (req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-//   next();
-// });
-
+// respond ../public/index.hbs
 app.get('/', (req, res) => {
   Image.findLatest()
     .then((data) => {
@@ -48,7 +45,7 @@ app.get('/', (req, res) => {
     });
 });
 
-// Submit Image
+// POST image to mongo db and filesystem
 app.post('/images', authenticate, (req, res) => {
   if (!req.files) return res.status(400).send({ status: 'no file'});
 
@@ -72,6 +69,7 @@ app.post('/images', authenticate, (req, res) => {
   });
 });
 
+// DELETE images from mongodb and filesystem
 app.delete('/images', authenticate, (req, res) => {
   Image
     .find()
@@ -97,7 +95,7 @@ app.delete('/images', authenticate, (req, res) => {
     });
 });
 
-// Get last n images
+// GET last n image filepath(s) from mongodb
 app.get('/images', (req, res) => {
   Image.findLast(framesToSend)
     .then((frames) => {
@@ -109,7 +107,7 @@ app.get('/images', (req, res) => {
     });
 });
 
-// User Login
+// POST user login
 app.post('/users/login', (req, res) => {
   const body = _.pick(req.body, ['username', 'password']);
   User.findByCredentials(body.username, body.password)
@@ -123,6 +121,7 @@ app.post('/users/login', (req, res) => {
     });
 });
 
+// DELETE my user token
 app.delete('/users/me/token', authenticate, (req, res) => {
   req.user
     .removeToken(req.token)
@@ -134,20 +133,21 @@ app.delete('/users/me/token', authenticate, (req, res) => {
     });
 });
 
-app.post('/users', (req, res) => {
-  const body = _.pick(req.body, ['username', 'password']);
-  const user = new User(body);
+// POST new user to database
+// app.post('/users', (req, res) => {
+//   const body = _.pick(req.body, ['username', 'password']);
+//   const user = new User(body);
 
-  user
-    .save()
-    .then(() => user.generateAuthToken())
-    .then((token) => {
-      res.header('x-auth', token).send(user);
-    })
-    .catch((e) => {
-      res.status(400).send(e.message);
-    });
-});
+//   user
+//     .save()
+//     .then(() => user.generateAuthToken())
+//     .then((token) => {
+//       res.header('x-auth', token).send(user);
+//     })
+//     .catch((e) => {
+//       res.status(400).send(e.message);
+//     });
+// });
 
 app.listen(port, () => {
   console.log(`Started at port ${port}`);
