@@ -1,4 +1,5 @@
 const video = new Whammy.Video();
+const msPerFrame = 41.6;
 
 fetch(`${url}/images`)
   .then((res) => res.json())
@@ -7,7 +8,7 @@ fetch(`${url}/images`)
     Promise.all(promises)
       .then((canvases) => {
         console.log(canvases)
-        canvases.forEach(canvas => video.add(canvas, 500));
+        canvases.forEach(canvas => video.add(canvas, msPerFrame));
         video.compile(false, (webm) => {
           const url = window.URL.createObjectURL(webm);
           const videoElm = document.getElementById('timelapse-video');

@@ -18,10 +18,10 @@ ImageSchema.statics.findLatest = function findLatest() {
     });
 };
 
-ImageSchema.statics.findLast60 = function findLast60() {
+ImageSchema.statics.findLast = function findLast(n) {
   const Image = this;
 
-  return Image.find().sort({ _id: -1 }).limit(60)
+  return Image.find().sort({ _id: -1 }).limit(n)
     .then((images) => {
       if (!images.length) return Promise.reject();
       return images

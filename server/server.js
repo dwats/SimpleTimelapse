@@ -17,6 +17,7 @@ const { authenticate } = require('./middleware/authenticate');
 const publicPath = path.join(`${__dirname}/../public`);
 const port = process.env.PORT;
 const app = express();
+const framesToSend = 300;
 
 hbs.registerPartials(path.join(__dirname, '../views/partials'));
 app.set('view engine', 'hbs');
@@ -38,7 +39,7 @@ app.get('/', (req, res) => {
         latestImage: `${data.filename}`,
         datetime: ObjectId(data._id).getTimestamp(),
         year: new Date().getFullYear(),
-        APP_URL: process.env.APP_URL || 'https://tranquil-retreat-86983.herokuapp.com'
+        APP_URL: process.env.APP_URL
       });
     })
     .catch((e) => {
@@ -76,10 +77,10 @@ app.delete('/images', authenticate, (req, res) => {
     .find()
     .sort({ _id: -1 })
     .then((images) => {
-      if (images.length <= 60) return res.send({ status: 'no action' });
+      if (images.length <= framesToSend) return res.send({ status: 'no action' });
 
       const prunePath = path.join(__dirname, '../public/images');
-      const toPrune = images.slice(60);
+      const toPrune = images.slice(framesToSend);
       const prunePromise = prune(prunePath, toPrune);
       prunePromise
         .then(() => {
@@ -96,9 +97,9 @@ app.delete('/images', authenticate, (req, res) => {
     });
 });
 
-// Get last 60 images
+// Get last n images
 app.get('/images', (req, res) => {
-  Image.findLast60()
+  Image.findLast(framesToSend)
     .then((frames) => {
       if (!frames.length) return res.status(404).send();
       res.send({ status: 'ok', frames });
