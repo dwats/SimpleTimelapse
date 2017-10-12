@@ -13,6 +13,8 @@ fetch(`${url}/images`)
           const url = window.URL.createObjectURL(webm);
           const videoElm = document.getElementById('timelapse-video');
           const progressElm = document.getElementById('progress');
+          const spinner = document.getElementById('timelapse-spinner');
+          spinner.style.display = 'none';
           videoElm.src = url;
           videoElm.style.display = '';   
           progressElm.innerHTML = '';
