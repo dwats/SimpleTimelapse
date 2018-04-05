@@ -1,5 +1,4 @@
-require('dotenv').config();
-require('./config/config'); // may be called to early (test)
+require('./config/config');
 require('./db/mongoose');
 const path = require('path');
 const express = require('express');
@@ -18,11 +17,10 @@ app.use(fileUpload({limit: '50mb'}));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
 app.use(express.static(publicPath));
-
 app.use('/', routes);
 
 app.listen(port, () => {
   console.log(`Started at port ${port}`);
 });
 
-module.exports = { app };
+module.exports = app;
