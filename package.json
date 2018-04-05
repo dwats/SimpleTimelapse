@@ -4,7 +4,7 @@
   "description": "A simple timelapse site and API",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "node index.js",
     "start-watch": "nodemon -e js,html --exec \"npm start\"",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
     "test-watch": "nodemon --exec \"npm test\""
