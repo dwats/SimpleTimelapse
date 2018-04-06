@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title></title>
+    <title>Timelapse</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <header>Simple Timelapse</header>
+    {{> header}}
     <div id="container">
-      <div id="latest-image">
-        <div>Last Update: {{datetime}}</div>
-        <img src="/images/{{latestImage}}" alt="Latest Image"></img>
+      <div class="section">
+        <div class="section-header">
+          Latest Frame
+        </div>
+        <div class="section-body">
+          Last Update: {{datetime}}
+          <img src="/images/{{latestImage}}" alt="Latest Image"></img>
+        </div>
       </div>
-      <div id="timelapse">
-        <div id="progress">Loading timelapse...</div>
-        <canvas id="timelapse-canvas" width="1024" height="768" style="display: none;"></canvas>
-        <video id="timelapse-video" style="display: none" controls autoplay loop></video>
-        <img id="timelapse-spinner" src="/img/loading.svg" alt="loading timelapse">
+      <div class="section">
+        <div class="section-header">
+          Timelapse
+        </div>
+        <div class="section-body">
+          Next Timelapse Rendered: {{nextTimelapse}}
+          <video id="timelapse-video" src="/media/timelapse.mp4" controls loop></video>
+        </div>
       </div>
     </div>
-    <footer>Eric Julius {{year}}</header>
 
+    <footer>
+      <p>Eric Julius {{year}}</p>
+    </footer>
     {{!-- Libs  --}}
     <script>
       const url = "{{APP_URL}}";
     </script>
     <script src="libs/whammy.js"></script>
-    <script src="js/index.js"></script>
   </body>
 </html>
