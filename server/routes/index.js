@@ -10,7 +10,6 @@ const timelapse = require('./timelapse');
 const router = express.Router();
 router.use('/users', users);
 router.use('/images', images);
-router.use('/timelapse', timelapse);
 
 /**
  * @todo Examine the consequences of having no images in the database.
