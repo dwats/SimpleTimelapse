@@ -17,6 +17,15 @@ const videoOptions = {
   pixelFormat: 'yuv420p'
 };
 
+/**
+ * Create timelapse from images.
+ *
+ * Image order and filenames are queried from the mongodb
+ * then imported from `../public/images`.
+ * @param {*} options - videoshow options
+ * @param {*} inputDir - timelapse frames directory
+ * @param {*} outputDir - timelapse mp4 output
+ */
 function makeTimelapse(options, inputDir, outputDir) {
   Image.findLast(framesPerTimelapse)
     .then((frames) => {
