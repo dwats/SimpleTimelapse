@@ -20,7 +20,7 @@ app.use(express.static(publicPath));
 app.use('/', routes);
 
 app.listen(port, () => {
-  console.log(`Started at port ${port}`);
+  console.log(`[${new Date()}] Started at port ${port}`);
 });
 
 module.exports = app;
