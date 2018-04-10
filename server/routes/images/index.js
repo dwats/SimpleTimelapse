@@ -5,7 +5,7 @@ const { authenticate } = require('../../middleware/authenticate');
 const router = express.Router();
 
 // POST request image to be created from form buffer data
-router.post('/', imageController.imageCreatePost); // Authenticate!
+router.post('/', authenticate, imageController.imageCreatePost);
 
 // DELETE request image prune action
 router.delete('/', authenticate, imageController.imageDelete);
