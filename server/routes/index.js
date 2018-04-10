@@ -10,7 +10,7 @@ const timelapse = require('./timelapse');
 const router = express.Router();
 router.use('/users', users);
 router.use('/images', images);
-
+process.on('unhandledRejection', r => console.log(r));
 /**
  * @todo Examine the consequences of having no images in the database.
  */
