@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
   Image.findLatest()
     .then((data) => {
       res.render('index.hbs', {
-        latestImage: `${data.filename}`,
+        latestImage: data ? data.filename : undefined,
         datetime: ObjectId(data._id).getTimestamp(),
         year: new Date().getFullYear(),
         APP_URL: process.env.APP_URL
@@ -26,7 +26,6 @@ router.get('/', (req, res) => {
     })
     .catch((e) => {
       console.log('error fetching image from db', e);
-      res.status(500).end();
     });
 });
 
