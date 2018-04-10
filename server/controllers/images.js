@@ -1,33 +1,32 @@
 const path = require('path');
 const { ObjectId } = require('mongodb');
 const { Image } = require('../models/image');
-const { prune } = require('../utils/prune.js');
+const { prune } = require('../utils/prune');
+const saveFile = require('../utils/saveFile');
 
 const framesPerTimelapse = Number(process.env.FRAMES_PER_TIMELAPSE);
 
 exports.imageCreatePost = (req, res) => {
-  if (!req.files) return res.status(400).send({ status: 'no file' });
+  if (!req.files) return res.status(400).end();
 
   const file = req.files.file;
   const fileId = new ObjectId();
-  file.mv(path.join(__dirname, '../../public/images', `${fileId}.png`), (err) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send({ status: 'could not save file' });
-    }
-    const image = new Image({
-      _id: fileId,
-      filename: `${fileId}.png`
-    });
-    image
-      .save()
-      .then(() => {
-        res.send({ status: 'ok' });
-      })
-      .catch(() => {
-        res.status(400).send({ status: 'could not write to database'});
+  const filepath = path.join(__dirname, `../../public/images/${fileId}.png`);
+
+  saveFile(filepath, file)
+    .then(() => {
+      const image = new Image({
+        _id: fileId,
+        filename: `${fileId}.png`
       });
-  });
+      return image.save();
+    })
+    .then(() => {
+      res.send();
+    })
+    .catch(() => {
+      res.status(500).end();
+    });
 };
 
 exports.imageDelete = (req, res) => {
@@ -37,8 +36,7 @@ exports.imageDelete = (req, res) => {
     .find()
     .sort({ _id: -1 })
     .then((images) => {
-      if (images.length <= framesPerTimelapse) return res.send({ status: 'no action' });
-
+      if (!images || images.length <= framesPerTimelapse) return Promise.reject('no-action');
       const prunePath = path.join(__dirname, '../../public/images');
       toPrune = images.slice(framesPerTimelapse);
       return prune(prunePath, toPrune);
@@ -48,22 +46,23 @@ exports.imageDelete = (req, res) => {
       return Image.remove({ _id: { $in: imageIds }});
     })
     .then(() => {
-      res.send({ status: 'ok' });
+      res.send();
     })
     .catch((e) => {
       console.log(e);
-      res.status(500).end();
+      if (e === 'no-action') return res.send();
+      return res.status(500).end();
     });
 };
 
 exports.imagesFindLastNGet = (req, res) => {
   Image.findLast(framesPerTimelapse)
     .then((frames) => {
-      if (!frames.length) return res.status(404).send();
-      res.send({ status: 'ok', frames });
+      if (!frames.length) return res.status(404).end();
+      res.send();
     })
     .catch((e) => {
       console.log(e);
-      res.status(400).send({ status: 'could not find frames' });
+      return res.status(500).end();
     });
 };
