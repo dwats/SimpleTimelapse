@@ -10,9 +10,11 @@ exports.imageCreatePost = (req, res) => {
 
   const file = req.files.file;
   const fileId = new ObjectId();
-  file.mv(path.join(__dirname, '../public/images', `${fileId}.png`), (err) => {
-    if (err) res.status(500).send({ status: 'could not save file' });
-
+  file.mv(path.join(__dirname, '../../public/images', `${fileId}.png`), (err) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send({ status: 'could not save file' });
+    }
     const image = new Image({
       _id: fileId,
       filename: `${fileId}.png`
@@ -35,7 +37,7 @@ exports.imageDelete = (req, res) => {
     .then((images) => {
       if (images.length <= framesPerTimelapse) return res.send({ status: 'no action' });
 
-      const prunePath = path.join(__dirname, '../public/images');
+      const prunePath = path.join(__dirname, '../../public/images');
       const toPrune = images.slice(framesPerTimelapse);
       const prunePromise = prune(prunePath, toPrune);
       prunePromise
