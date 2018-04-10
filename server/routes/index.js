@@ -25,6 +25,7 @@ router.get('/', (req, res) => {
     })
     .catch((e) => {
       console.log('error fetching image from db', e);
+      res.status(500).end();
     });
 });
 
