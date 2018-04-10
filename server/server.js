@@ -1,3 +1,4 @@
+process.on('unhandledRejection', r => console.log(r));
 require('./config/config');
 require('./db/mongoose');
 const path = require('path');
