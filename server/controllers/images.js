@@ -31,6 +31,8 @@ exports.imageCreatePost = (req, res) => {
 };
 
 exports.imageDelete = (req, res) => {
+  let toPrune;
+
   Image
     .find()
     .sort({ _id: -1 })
@@ -38,20 +40,19 @@ exports.imageDelete = (req, res) => {
       if (images.length <= framesPerTimelapse) return res.send({ status: 'no action' });
 
       const prunePath = path.join(__dirname, '../../public/images');
-      const toPrune = images.slice(framesPerTimelapse);
-      const prunePromise = prune(prunePath, toPrune);
-      prunePromise
-        .then(() => {
-          const imageIds = toPrune.map((image) => image._id);
-          return Image.remove({ _id: { $in: imageIds }});
-        })
-        .then(() => {
-          res.send({ status: 'ok' });
-        })
-        .catch((e) => {
-          console.log(e);
-          res.status(500).send({ status: 'error processing delete' });
-        });
+      toPrune = images.slice(framesPerTimelapse);
+      return prune(prunePath, toPrune);
+    })
+    .then(() => {
+      const imageIds = toPrune.map((image) => image._id);
+      return Image.remove({ _id: { $in: imageIds }});
+    })
+    .then(() => {
+      res.send({ status: 'ok' });
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(500).end();
     });
 };
 
@@ -65,4 +66,4 @@ exports.imagesFindLastNGet = (req, res) => {
       console.log(e);
       res.status(400).send({ status: 'could not find frames' });
     });
-}
+};
