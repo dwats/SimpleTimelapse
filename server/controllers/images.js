@@ -24,7 +24,9 @@ exports.imageCreatePost = (req, res) => {
     .then(() => {
       res.send();
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log('error in POST /images controller');
+      console.log(e);
       res.status(500).end();
     });
 };
@@ -49,8 +51,9 @@ exports.imageDelete = (req, res) => {
       res.send();
     })
     .catch((e) => {
-      console.log(e);
       if (e === 'no-action') return res.send();
+      console.log('error in DELETE /images controller');
+      console.log(e);
       return res.status(500).end();
     });
 };
@@ -62,6 +65,7 @@ exports.imagesFindLastNGet = (req, res) => {
       res.send();
     })
     .catch((e) => {
+      console.log('error in GET /images controller');
       console.log(e);
       return res.status(500).end();
     });
