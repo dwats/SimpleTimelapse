@@ -10,7 +10,6 @@ const path = require('path');
  */
 const prune = (directory, files) => {
   const promises = files.map((file) => {
-    console.log('removing: ', file);
     const filepath = path.join(directory, file.filename);
     return fs.unlink(filepath);
   });
