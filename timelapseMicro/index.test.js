@@ -19,10 +19,17 @@ function makeTimelapseFromDir(options, inputDir, outputDir) {
   fs.readdir(inputDir)
     .then((files) => {
       if (!files.length) return console.log(`[${new Date()}] timelapse has no frames!`);
+      files = files.slice(0, 60);
       const frameFilenames = files.map((frame) => path.join(inputDir, frame));
-      console.log(frameFilenames);
+      console.log(frameFilenames.length);
       videoshow(frameFilenames, videoOptions)
         .save(path.join(outputDir, 'test.mp4'))
+        .on('start', () => {
+          console.log(`[${new Date()}] starting...`);
+        })
+        .on('progress', () => {
+          console.log('progressing...');
+        })
         .on('error', (err, stdout, stderr) => {
           console.log(`[${new Date()}] timelapse node error`);
           console.log(err);
@@ -32,7 +39,7 @@ function makeTimelapseFromDir(options, inputDir, outputDir) {
           console.log(stderr);
         })
         .on('end', (output) => {
-          console.log(`[${new Date()}] timelapse complete`, output);
+          console.log(`[${new Date()}] done.\n\toutput filepath:`, output);
         });
     })
     .catch((e) => {
