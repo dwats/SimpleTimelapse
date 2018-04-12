@@ -2,13 +2,13 @@ const path = require('path');
 const fs = require('fs-extra');
 const videoshow = require('videoshow');
 
-const imageDir = path.join(__dirname, '../public/images');
-const videoDir = path.join(__dirname, '../public/media');
+const imageDir = path.join(__dirname, './images');
+const videoDir = path.join(__dirname, '.');
 const videoOptions = {
-  fps: 30,
-  loop: 1/30,
+  fps: 60,
+  loop: 0.05,
   transition: false,
-  videoBitrate: 1024,
+  videoBitrate: 4068,
   videoCodec: 'libx264',
   size: '1024x768',
   format: 'mp4',
